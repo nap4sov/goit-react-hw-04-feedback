@@ -1,38 +1,42 @@
-import { Component } from 'react'
+import { useState } from 'react'
 import Section from './Section'
 import FeedbackOptions from './FeedbackOptions'
 import Statistics from './Statistics'
 import Notifitation from './Notification'
 
-class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0
-  }
-  handleButtonClick = (event) => {
+export default function App() {
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const feedback = { good, neutral, bad }
+  const feedbackOptions = Object.keys(feedback)
+  const totalFeedback = Object.values(feedback).reduce((total, value) => total + value, 0)
+  const positivePercentage = Math.round((good/totalFeedback)*100)
+
+  const handleButtonClick = (event) => {
     const buttonName = event.target.name
 
-    this.setState(prevState => ({
-      [buttonName]: prevState[buttonName] + 1
-    }))
+    switch (buttonName) {
+      case 'good':
+        setGood(prev => prev + 1)
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1)
+        break;
+      case 'bad':
+        setBad(prev => prev + 1)
+        break;
+    
+      default:
+        break;
+    }
   }
-  countTotalFeedback() {
-    return Object.values(this.state).reduce((total, value) => total + value, 0)
-  }
-  countPositiveFeedbackPercentage(total) {
-    return Math.round((this.state.good / total) * 100)
-  }
-
-  render() {
-    const { good, neutral, bad } = this.state
-    const buttonOptions = Object.keys(this.state)
-    const totalFeedback = this.countTotalFeedback()
-    const positivePercentage = this.countPositiveFeedbackPercentage(totalFeedback)
+  
 
     return (<>
       <Section title='Please leave feedback'>
-        <FeedbackOptions options={buttonOptions} incrementStatisticsData={this.handleButtonClick} />
+        <FeedbackOptions options={feedbackOptions} incrementStatisticsData={handleButtonClick} />
       </Section>
 
       <Section title='Statistics'>
@@ -46,10 +50,7 @@ class App extends Component {
           </Statistics>
           : <Notifitation message='There is no feedback' />}
       </Section>
-    </>
+      </>
     );
-  }
 }
-
-export default App
 
