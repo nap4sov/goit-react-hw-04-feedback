@@ -1,0 +1,16 @@
+.rating {
+    display: flex;
+    justify-content: space-around;
+}
+
+.stats {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.aboveAverage {
+    color: green;
+}
+.belowAverage {
+    color: red;
+}
